@@ -30,7 +30,7 @@ namespace ServerMutation
             return true;
         }
         [WebMethod]
-        public bool Login(int NoSolicitud, String rfc, int Tipo)
+        public bool Login(int NoSolicitud, int Tipo)
         {
             //Partes de conexión
             MySqlConnection conn = new MySqlConnection();
@@ -46,10 +46,10 @@ namespace ServerMutation
             if(Tipo == 0)
             {
                 //Mandamos la solicitud de los datos
-                cmd.CommandText = $"SELECT s.id FROM solicitudes_cambios s JOIN trabajador t ON s.id = t.id WHERE t.rfc = '{rfc}' AND s.id = '{NoSolicitud}';";
+                cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres,s.id,s.f_registro, s.estado_actual, s.observaciones_cancelacion, s.observaciones_rechazo FROM trabajador t JOIN solicitudes_cambios s ON s.trabajador = t.id WHERE s.id = '{NoSolicitud}';";
             }else if (Tipo == 1)
             {
-                cmd.CommandText = $"SELECT s.id FROM solicitudes_permuta s JOIN trabajador t ON s.id = t.id WHERE t.rfc = '{rfc}' AND s.id = '{NoSolicitud}';";
+                cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres,s.id,s.f_registro, s.estado_actual, s.observacion_ur, s.observacion_ur_2, s.observaciones_cancelacion, s.observaciones_dgp, s.observaciones_rechazo FROM trabajador t JOIN solicitudes_permuta s ON s.id_trabajador = t.id WHERE s.id = '{NoSolicitud}';";
             }
             
             
@@ -67,7 +67,7 @@ namespace ServerMutation
             }
         }
         [WebMethod]
-        public DataSet Inicio(int NoSolicitud)
+        public DataSet Inicio(int NoSolicitud, int Tipo)
         {
             MySqlConnection conn = new MySqlConnection();
             MySqlCommand cmd = new MySqlCommand();
@@ -79,7 +79,15 @@ namespace ServerMutation
             cmd.Connection = conn;
             cmd.CommandType = CommandType.Text;
             //Mandamos la solicitud de los datos
-            cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, s.estado_actual, s.opcion_1,s.opcion_2, s.nivel_educativo, t.rfc FROM trabajador t JOIN solicitudes_cambios s ON s.trabajador = t.id WHERE s.id = '{NoSolicitud}';";
+            if (Tipo == 0)
+            {
+                //Mandamos la solicitud de los datos
+                cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, s.estado_actual, s.opcion_1,s.opcion_2, s.nivel_educativo, t.rfc FROM trabajador t JOIN solicitudes_cambios s ON s.trabajador = t.id WHERE s.id = '{NoSolicitud}';";
+            }
+            else if (Tipo == 1)
+            {
+                cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, s.estado_actual, s.opcion_1, s.nivel_educativo, t.rfc FROM trabajador t JOIN solicitudes_permuta s ON s.id_trabajador = t.id WHERE s.id = '{NoSolicitud}';";
+            }
             da.SelectCommand = cmd;
             conn.Open();
             da.Fill(ds);
@@ -87,7 +95,7 @@ namespace ServerMutation
             return ds;
         }
         [WebMethod]
-        public DataSet Revision(int NoSolicitud)
+        public DataSet Revision(int NoSolicitud, int Tipo)
         {
             MySqlConnection conn = new MySqlConnection();
             MySqlCommand cmd = new MySqlCommand();
@@ -100,7 +108,16 @@ namespace ServerMutation
             cmd.CommandType = CommandType.Text;
             //Mandamos la solicitud de los datos
             //cmd.CommandText = $"Aqui irá la consulta de la BD";
-            cmd.CommandText = $"Aqui irá la consulta de la BD";
+            if (Tipo == 0)
+            {
+                //Mandamos la solicitud de los datos
+                cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, s.estado_actual, s.opcion_1,s.opcion_2, s.nivel_educativo, t.rfc FROM trabajador t JOIN solicitudes_cambios s ON s.trabajador = t.id WHERE s.id = '{NoSolicitud}';";
+            }
+            else if (Tipo == 1)
+            {
+                cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, s.estado_actual, s.opcion_1, s.nivel_educativo, t.rfc FROM trabajador t JOIN solicitudes_permuta s ON s.id_trabajador = t.id WHERE t.rfc = 'OORF0004'AND s.id = '{NoSolicitud}';";
+            }
+            
             da.SelectCommand = cmd;
             conn.Open();
             da.Fill(ds);
@@ -121,6 +138,7 @@ namespace ServerMutation
             cmd.CommandType = CommandType.Text;
             //Mandamos la solicitud de los datos
             cmd.CommandText = $"Aqui irá la consulta de la BD";
+            if 
             da.SelectCommand = cmd;
             conn.Open();
             da.Fill(ds);
