@@ -324,32 +324,5 @@ namespace ServerMutation
                 return null;
             }
         }
-        public DataSet Directorio()
-        {
-            try
-            {
-                MySqlConnection conn = new MySqlConnection();
-                MySqlCommand cmd = new MySqlCommand();
-                MySqlDataAdapter da = new MySqlDataAdapter();
-                DataSet ds = new DataSet();
-
-                //Datos de conexion
-                conn.ConnectionString = conexion;
-                cmd.Connection = conn;
-                cmd.CommandType = CommandType.Text;
-                //Mandamos la solicitud de los datos
-                cmd.CommandText = $"Aqui irá la consulta de la BD";
-                da.SelectCommand = cmd;
-                conn.Open();
-                da.Fill(ds);
-                conn.Close();
-                return ds;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return null;
-            }
-        }
     }
 }
