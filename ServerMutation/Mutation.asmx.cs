@@ -34,7 +34,7 @@ namespace ServerMutation
         }
         /*Con esta función podemos analizar si la conexión es correcta*/
         [WebMethod]
-        public bool Login(int NoSolicitud, int Tipo)
+        public bool Login(int NoSolicitud, String rfc, int Tipo)
         {
             try
             {
@@ -52,12 +52,12 @@ namespace ServerMutation
                 if (Tipo == 0)
                 {
                     //Mandamos la solicitud de los datos para  cambios
-                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres,s.id,s.f_registro, s.estado_actual, s.observaciones_cancelacion, s.observaciones_rechazo FROM trabajador t JOIN solicitudes_cambios s ON s.trabajador = t.id WHERE s.id = '{NoSolicitud}';";
+                    cmd.CommandText = $"SELECT s.id FROM trabajador t JOIN solicitudes_cambios s ON s.trabajador = t.id WHERE s.id = {NoSolicitud} AND t.rfc ='{rfc}';";
                 }
                 else if (Tipo == 1)
                 {
                     //Mandamos la solicitud de los datos para permutas
-                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres,s.id,s.f_registro, s.estado_actual, s.observacion_ur, s.observacion_ur_2, s.observaciones_cancelacion, s.observaciones_dgp, s.observaciones_rechazo FROM trabajador t JOIN solicitudes_permuta s ON s.id_trabajador = t.id WHERE s.id = '{NoSolicitud}';";
+                    cmd.CommandText = $"SELECT s.id FROM trabajador t JOIN solicitudes_permuta s ON s.id_trabajador = t.id WHERE s.id = {NoSolicitud} AND t.rfc ='{rfc}';";
                 }
 
                 //Mandamos a consulta
