@@ -100,12 +100,12 @@ namespace ServerMutation
                 if (Tipo == 0)
                 {
                     //Mandamos la solicitud de los datos si es cambios
-                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, s.estado_actual, s.opcion_1,s.opcion_2, s.nivel_educativo, t.rfc FROM trabajador t JOIN solicitudes_cambios s ON s.trabajador = t.id WHERE s.id = '{NoSolicitud}';";
+                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, esa.nombre as Actual, esb.nombre as Opcion1, esc.nombre as Opcion2, n.nivel, t.rfc,s.solicitud_real, s.cancelada, s.validada_dgp, s.certificada_ur, s.marcada FROM trabajador t JOIN solicitudes_cambios s ON s.trabajador = t.id JOIN estados esa ON s.estado_actual = esa.idestados JOIN estados esb ON s.opcion_1 = esb.idestados JOIN estados esc ON s.opcion_2 = esc.idestados JOIN nivel_educativo n ON n.idnivel_educativo = s.nivel_educativo WHERE s.id = '{NoSolicitud}';";
                 }
                 else if (Tipo == 1)
                 {
                     //Mandamos la solicitud de los datos si es permutas
-                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, s.estado_actual, s.opcion_1, s.nivel_educativo, t.rfc FROM trabajador t JOIN solicitudes_permuta s ON s.id_trabajador = t.id WHERE s.id = '{NoSolicitud}';";
+                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, esa.nombre as Actual , esb.nombre as Opcion, n.nivel, t.rfc,s.solicitud_capturada_100 as solicitud_real, s.cancelada, s.f_validacion_dgp as validada_dgp, s.certificado_ur as certificada_ur, s.marcada FROM trabajador t JOIN solicitudes_permuta s ON s.id_trabajador = t.id JOIN estados esa ON s.estado_actual = esa.idestados JOIN estados esb ON s.opcion_1 = esb.idestados JOIN nivel_educativo n ON n.idnivel_educativo = s.nivel_educativo WHERE s.id = '{NoSolicitud}';";
                 }
                 da.SelectCommand = cmd;
                 //mandamos a consultas
@@ -139,12 +139,12 @@ namespace ServerMutation
                 if (Tipo == 0)
                 {
                     //Mandamos la solicitud de los datos para cambios
-                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, s.estado_actual, s.opcion_1,s.opcion_2, s.nivel_educativo, t.rfc FROM trabajador t JOIN solicitudes_cambios s ON s.trabajador = t.id WHERE s.id = '{NoSolicitud}';";
+                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, esa.nombre as Actual, esb.nombre as Opcion1, esc.nombre as Opcion2, n.nivel, t.rfc FROM trabajador t JOIN solicitudes_cambios s ON s.trabajador = t.id JOIN estados esa ON s.estado_actual = esa.idestados JOIN estados esb ON s.opcion_1 = esb.idestados JOIN estados esc ON s.opcion_2 = esc.idestados JOIN nivel_educativo n ON n.idnivel_educativo = s.nivel_educativo WHERE s.id =  '{NoSolicitud}';";
                 }
                 else if (Tipo == 1)
                 {
                     //Mandamos la solicitud de los datos para permutas
-                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, s.estado_actual, s.opcion_1, s.nivel_educativo, t.rfc FROM trabajador t JOIN solicitudes_permuta s ON s.id_trabajador = t.id WHERE t.rfc = 'OORF0004'AND s.id = '{NoSolicitud}';";
+                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, esa.nombre as Actual , esb.nombre as Opcion, n.nivel, t.rfc FROM trabajador t JOIN solicitudes_permuta s ON s.id_trabajador = t.id JOIN estados esa ON s.estado_actual = esa.idestados JOIN estados esb ON s.opcion_1 = esb.idestados JOIN nivel_educativo n ON n.idnivel_educativo = s.nivel_educativo WHERE s.id = '{NoSolicitud}';";
                 }
                 //mandamos a consultas
                 da.SelectCommand = cmd;
