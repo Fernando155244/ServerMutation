@@ -23,7 +23,7 @@ namespace ServerMutation
     // [System.Web.Script.Services.ScriptService]
     public class Mutation : System.Web.Services.WebService
     {
-        string conexion = @"server=mysqludl155244.mysql.database.azure.com;port=3306;uid=Fernando155244;pwd=Luminosc155244;database=cambintest_limpia";
+        string conexion = @"server=127.0.0.1;port=3306;uid=root;pwd='';database=cambintest_limpia";
 
         /*Con esta función buscamos saber si tenemos o no conexión*/
         [WebMethod]
@@ -100,12 +100,12 @@ namespace ServerMutation
                 if (Tipo == 0)
                 {
                     //Mandamos la solicitud de los datos si es cambios
-                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, esa.nombre as Actual, esb.nombre as Opcion1, esc.nombre as Opcion2, n.nivel, t.rfc,s.solicitud_real, s.cancelada, s.validada_dgp, s.certificada_ur, s.marcada FROM trabajador t JOIN solicitudes_cambios s ON s.trabajador = t.id JOIN estados esa ON s.estado_actual = esa.idestados JOIN estados esb ON s.opcion_1 = esb.idestados JOIN estados esc ON s.opcion_2 = esc.idestados JOIN nivel_educativo n ON n.idnivel_educativo = s.nivel_educativo WHERE s.id = '{NoSolicitud}';";
+                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, esa.nombre as Actual, esb.nombre as Opcion1, esc.nombre as Opcion2, n.nivel, t.rfc, s.f_actualizacion,s.tipo_solicitud, s.solicitud_real, s.f_registro, s.cancelada, s.observaciones_cancelacion, s.validada_dgp, s.certificada_ur, s.observaciones_rechazo, s.marcada FROM trabajador t JOIN solicitudes_cambios s ON s.trabajador = t.id JOIN estados esa ON s.estado_actual = esa.idestados JOIN estados esb ON s.opcion_1 = esb.idestados JOIN estados esc ON s.opcion_2 = esc.idestados JOIN nivel_educativo n ON n.idnivel_educativo = s.nivel_educativo WHERE s.id = '{NoSolicitud}';";
                 }
                 else if (Tipo == 1)
                 {
                     //Mandamos la solicitud de los datos si es permutas
-                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, esa.nombre as Actual , esb.nombre as Opcion, n.nivel, t.rfc,s.solicitud_capturada_100 as solicitud_real, s.cancelada, s.f_validacion_dgp as validada_dgp, s.certificado_ur as certificada_ur, s.marcada FROM trabajador t JOIN solicitudes_permuta s ON s.id_trabajador = t.id JOIN estados esa ON s.estado_actual = esa.idestados JOIN estados esb ON s.opcion_1 = esb.idestados JOIN nivel_educativo n ON n.idnivel_educativo = s.nivel_educativo WHERE s.id = '{NoSolicitud}';";
+                    cmd.CommandText = $"SELECT t.paterno, t.materno, t.nombres, esa.nombre as Actual , esb.nombre as Opcion, n.nivel, t.rfc, s.f_actualizacion, s.solicitud_capturada_100 as solicitud_real, s.f_registro, s.cancelada, s.observaciones_cancelacion, s.f_validacion_dgp as validada_dgp, s.f_validacion_dgp, s.observaciones_dgp, s.certificado_ur as certificada_ur, s.f_certificacion_ur, s.observacion_ur, s.marcada FROM trabajador t JOIN solicitudes_permuta s ON s.id_trabajador = t.id JOIN estados esa ON s.estado_actual = esa.idestados JOIN estados esb ON s.opcion_1 = esb.idestados JOIN nivel_educativo n ON n.idnivel_educativo = s.nivel_educativo WHERE s.id = '{NoSolicitud}';";
                 }
                 da.SelectCommand = cmd;
                 //mandamos a consultas
@@ -185,7 +185,7 @@ namespace ServerMutation
                     {
                         //SELECT e.nombre, s.estado_actual, COUNT(s.id) FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados GROUP BY s.estado_actual;
                         //Tratandose de los certificados tenemo 2 valores si o no
-                        cmd.CommandText = $"SELECT s.nivel_educativo, COUNT(s.id) FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados ";
+                        cmd.CommandText = $"SELECT n.nivel, COUNT(s.id) FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados JOIN nivel_educativo N ON N.idnivel_educativo=s.nivel_educativo ";
                         if (certificadas == 1 || status == 1)
                         {
                             cmd.CommandText = $"{cmd.CommandText} WHERE s.certificada_ur = 1";
