@@ -185,7 +185,7 @@ namespace ServerMutation
                     {
                         //SELECT e.nombre, s.estado_actual, COUNT(s.id) FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados GROUP BY s.estado_actual;
                         //Tratandose de los certificados tenemo 2 valores si o no
-                        cmd.CommandText = $"SELECT n.nivel, COUNT(s.id) FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados JOIN nivel_educativo N ON N.idnivel_educativo=s.nivel_educativo ";
+                        cmd.CommandText = $"SELECT n.nivel, COUNT(s.id) as Cant FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados JOIN nivel_educativo N ON N.idnivel_educativo=s.nivel_educativo ";
                         if (certificadas == 1 || status == 1)
                         {
                             cmd.CommandText = $"{cmd.CommandText} WHERE s.certificada_ur = 1";
@@ -200,7 +200,7 @@ namespace ServerMutation
                     {
                         //SELECT e.nombre, s.estado_actual, COUNT(s.id) FROM solicitudes_permuta s JOIN estados e ON s.estado_actual = e.idestados GROUP BY s.estado_actual;
                         //Tratandose de los certificados tenemo 2 valores si o no
-                        cmd.CommandText = $"SELECT s.nivel_educativo, COUNT(s.id) FROM solicitudes_permuta s JOIN estados e ON s.estado_actual = e.idestados ";
+                        cmd.CommandText = $"SELECT n.nivel, COUNT(s.id) as Cant FROM solicitudes_permuta s JOIN estados e ON s.estado_actual = e.idestados JOIN nivel_educativo N ON N.idnivel_educativo=s.nivel_educativo";
                         if (certificadas == 1 || status == 1)
                         {
                             cmd.CommandText = $"{cmd.CommandText} WHERE s.certificado_ur = 1";
@@ -215,7 +215,7 @@ namespace ServerMutation
                     {
                         //SELECT e.nombre, s.estado_actual, COUNT(s.id) FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados GROUP BY s.estado_actual;
                         //Tratandose de los certificados tenemo 2 valores si o no
-                        cmd.CommandText = $"SELECT s.nivel_educativo, COUNT(s.id) FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados ";
+                        cmd.CommandText = $"SELECT n.nivel, COUNT(s.id) as Cant FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados JOIN nivel_educativo N ON N.idnivel_educativo=s.nivel_educativo ";
                         if (certificadas == 1 || status == 1)
                         {
                             cmd.CommandText = $"{cmd.CommandText} WHERE s.certificada_ur = 1";
@@ -243,7 +243,7 @@ namespace ServerMutation
                     if (tipo == 0 && certificadas == 1 && canceladas == 1 && status == 0)
                     {
                         //En caso de que se desee ver todo mandamos a pedir todo
-                        cmd.CommandText = $" SELECT SUM(s.estado_actual + s2.estado_actual), e.nombre , COUNT(s.id)";
+                        cmd.CommandText = $" SELECT SUM(s.estado_actual + s2.estado_actual), e.nombre , COUNT(s.id) as Cant";
                         //Tratandose de los certificados tenemo 2 valores si o no
                     }
                     else
@@ -251,7 +251,7 @@ namespace ServerMutation
                       //Si tipo es 1 significa que quieren solo los cambios
                         if (tipo == 1)
                         {
-                            cmd.CommandText = $"SELECT e.nombre, s.estado_actual, COUNT(s.id) FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados";
+                            cmd.CommandText = $"SELECT e.nombre, s.estado_actual, COUNT(s.id) as Cant FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados";
                             //SELECT e.nombre, s.estado_actual, COUNT(s.id) FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados GROUP BY s.estado_actual;
                             //Tratandose de los certificados tenemo 2 valores si o no
 
@@ -267,7 +267,7 @@ namespace ServerMutation
                         }//Si es tipo 2 significa que quiere las permutas
                         else if (tipo == 2)
                         {
-                            cmd.CommandText = $"SELECT e.nombre, s.estado_actual, COUNT(s.id) FROM solicitudes_permuta s JOIN estados e ON s.estado_actual = e.idestados";
+                            cmd.CommandText = $"SELECT e.nombre, s.estado_actual, COUNT(s.id) as Cant FROM solicitudes_permuta s JOIN estados e ON s.estado_actual = e.idestados";
                             //SELECT e.nombre, s.estado_actual, COUNT(s.id) FROM solicitudes_permuta s JOIN estados e ON s.estado_actual = e.idestados GROUP BY s.estado_actual;
                             //Tratandose de los certificados tenemo 2 valores si o no
 
@@ -285,7 +285,7 @@ namespace ServerMutation
                         {
                             //SELECT e.nombre, s.estado_actual, COUNT(s.id) FROM solicitudes_cambios s JOIN estados e ON s.estado_actual = e.idestados GROUP BY s.estado_actual;
                             //Tratandose de los certificados tenemo 2 valores si o no
-                            cmd.CommandText = $"SELECT e.nombre, s.estado_actual, COUNT(s.id) FROM solicitudes_permuta s JOIN estados e ON s.estado_actual = e.idestados";
+                            cmd.CommandText = $"SELECT e.nombre, s.estado_actual, COUNT(s.id) as Cant FROM solicitudes_permuta s JOIN estados e ON s.estado_actual = e.idestados";
                             if (certificadas == 1 || status == 1)
                             {
                                 cmd.CommandText = $"{cmd.CommandText} WHERE s.certificado_ur = 1";
