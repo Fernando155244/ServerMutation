@@ -10,6 +10,7 @@ using MySql.Data.MySqlClient;
 using System.Runtime.ConstrainedExecution;
 using System.Configuration;
 using System.Runtime.CompilerServices;
+using Org.BouncyCastle.Asn1.Mozilla;
 
 namespace ServerMutation
 {
@@ -101,12 +102,12 @@ namespace ServerMutation
                 {
                     //Comando para evitar que se queden valores vacíos, usar en todo IFNULL(,"Vacio")
                     //Mandamos la solicitud de los datos si es cambios
-                    cmd.CommandText = $"SELECT IFNULL(s.id,\"Vacio\") as id, IFNULL(t.paterno,\"Vacio\") as paterno, IFNULL(t.materno,\"Vacio\") as materno, IFNULL(t.nombres,\"Vacio\") as nombre, IFNULL(esa.nombre,\"Vacio\") as Actual, IFNULL(esb.nombre,\"Vacio\") as Opcion1, IFNULL(esc.nombre,\"Vacio\") as Opcion2, IFNULL(n.nivel,\"Vacio\") as nivel, IFNULL(t.rfc,\"Vacio\") as rfc, IFNULL(s.tipo_solicitud,\"Vacio\") as tipo_solicitud, IFNULL(s.solicitud_real,\"Vacio\") as solicitud_real, IFNULL(s.f_registro,\"Vacio\") as f_registro, IFNULL(s.cancelada,\"Vacio\") as cancelada, IFNULL(s.observaciones_cancelacion,\"Vacio\") as observaciones_cancelacion, IFNULL(s.validada_dgp,\"Vacio\") as validada_dgp, iFNULL(ts.f_certificacion,\"Vacio\") as f_validacion_dgp, IFNULL(s.certificada_ur ,\"Vacio\") as certificada_ur, IFNULL(s.observaciones_rechazo,\"Vacio\") as observaciones_rechazo, IFNULL(s.marcada,\"Vacio\") as marcada FROM trabajador t RIGHT JOIN solicitudes_cambios s ON s.trabajador = t.id LEFT JOIN estados esa ON s.estado_actual = esa.idestados LEFT JOIN estados esb ON s.opcion_1 = esb.idestados LEFT JOIN estados esc ON s.opcion_2 = esc.idestados LEFT JOIN nivel_educativo n ON n.idnivel_educativo = s.nivel_educativo LEFT JOIN t_sol_cambios_certificadas ts ON s.id = ts.solicitud WHERE s.id = '{NoSolicitud}';";
+                    cmd.CommandText = $"SELECT IFNULL(s.id,\"Vacio\") as id, IFNULL(t.paterno,\"Vacio\") as paterno, IFNULL(t.materno,\"Vacio\") as materno, IFNULL(t.nombres,\"Vacio\") as nombre, IFNULL(esa.nombre,\"Vacio\") as Actual, IFNULL(esb.nombre,\"Vacio\") as Opcion1, IFNULL(esc.nombre,\"Vacio\") as Opcion2, IFNULL(n.nivel,\"Vacio\") as nivel, IFNULL(t.rfc,\"Vacio\") as rfc, IFNULL(s.tipo_solicitud,\"Vacio\") as tipo_solicitud, IFNULL(s.solicitud_real,\"Vacio\") as solicitud_real, IFNULL(s.f_registro,\"Vacio\") as f_registro, IFNULL(s.cancelada,\"Vacio\") as cancelada, IFNULL(s.observaciones_cancelacion,\"Vacio\") as observaciones_cancelacion, IFNULL(s.validada_dgp,\"Vacio\") as validada_dgp, IFNULL(s.certificada_ur ,\"Vacio\") as certificada_ur, iFNULL(ts.f_certificacion,\"Vacio\") as f_cetificada_ur, IFNULL(s.observaciones_rechazo,\"Vacio\") as observaciones_rechazo, IFNULL(s.marcada,\"Vacio\") as marcada FROM trabajador t RIGHT JOIN solicitudes_cambios s ON s.trabajador = t.id LEFT JOIN estados esa ON s.estado_actual = esa.idestados LEFT JOIN estados esb ON s.opcion_1 = esb.idestados LEFT JOIN estados esc ON s.opcion_2 = esc.idestados LEFT JOIN nivel_educativo n ON n.idnivel_educativo = s.nivel_educativo LEFT JOIN t_sol_cambios_certificadas ts ON s.id = ts.solicitud WHERE s.id = '{NoSolicitud}';";
                 }
                 else if (Tipo == 1)
                 {
                     //Mandamos la solicitud de los datos si es permutas
-                    cmd.CommandText = $"SELECT s.id, IFNULL(t.paterno,\"Vacio\") as paterno, IFNULL(t.materno,\"Vacio\") as materno, IFNULL(t.nombres,\"Vacio\") as nombres, IFNULL(esa.nombre,\"Vacio\") as Actual , IFNULL(esb.nombre,\"Vacio\") as Opcion, IFNULL(n.nivel,\"Vacio\") as nivel, IFNULL(t.rfc,\"Vacio\") as rfc, IFNULL(s.f_registro,\"Vacio\") as f_registro, IFNULL(s.solicitud_capturada_100,\"Vacio\") as solicitud_real, IFNULL(s.cancelada,\"Vacio\") as cancelada, IFNULL (sc.f_registro,\"Vacio\") as f_cancelada, IFNULL(s.observaciones_cancelacion,\"Vacio\") as observaciones_cancelacion, IFNULL(s.validacion_dgp,\"Vacio\") as validada_dgp, IFNULL(s.f_validacion_dgp,\"Vacio\") as f_validacion_dgp, IFNULL(s.observaciones_dgp,\"Vacio\") as observaciones_dgp, IFNULL(s.certificado_ur,\"Vacio\") as certificada_ur, IFNULL(s.f_certificacion_ur,\"Vacio\") as f_certificacion_ur, IFNULL(s.observacion_ur,\"Vacio\") as observacion_ur, IFNULL(s.marcada,\"Vacio\") as marcada FROM trabajador t RIGHT JOIN solicitudes_permuta s ON s.id_trabajador = t.id LEFT JOIN estados esa ON s.estado_actual = esa.idestados LEFT JOIN estados esb ON s.opcion_1 = esb.idestados LEFT JOIN nivel_educativo n ON n.idnivel_educativo = s.nivel_educativo LEFT JOIN solicitudes_canceladas sc ON s.id = sc.solicitud WHERE s.id = '{NoSolicitud}';";
+                    cmd.CommandText = $"SELECT s.id, IFNULL(t.paterno,\"Vacio\") as paterno, IFNULL(t.materno,\"Vacio\") as materno, IFNULL(t.nombres,\"Vacio\") as nombres, IFNULL(esa.nombre,\"Vacio\") as Actual , IFNULL(esb.nombre,\"Vacio\") as Opcion, IFNULL(n.nivel,\"Vacio\") as nivel, IFNULL(t.rfc,\"Vacio\") as rfc, IFNULL(s.f_registro,\"Vacio\") as f_registro, IFNULL(s.solicitud_capturada_100,\"Vacio\") as solicitud_real, IFNULL(s.cancelada,\"Vacio\") as cancelada, IFNULL(s.observaciones_cancelacion,\"Vacio\") as observaciones_cancelacion, IFNULL(s.validacion_dgp,\"Vacio\") as validada_dgp, IFNULL(s.f_validacion_dgp,\"Vacio\") as f_validacion_dgp, IFNULL(s.observaciones_dgp,\"Vacio\") as observaciones_dgp, IFNULL(s.certificado_ur,\"Vacio\") as certificada_ur, IFNULL(s.f_certificacion_ur,\"Vacio\") as f_certificacion_ur, IFNULL(s.observacion_ur,\"Vacio\") as observacion_ur, IFNULL(s.marcada,\"Vacio\") as marcada FROM trabajador t RIGHT JOIN solicitudes_permuta s ON s.id_trabajador = t.id LEFT JOIN estados esa ON s.estado_actual = esa.idestados LEFT JOIN estados esb ON s.opcion_1 = esb.idestados LEFT JOIN nivel_educativo n ON n.idnivel_educativo = s.nivel_educativo LEFT JOIN solicitudes_canceladas sc ON s.id = sc.solicitud  WHERE s.id = '{NoSolicitud}';";
                 }
                 da.SelectCommand = cmd;
                 //mandamos a consultas
@@ -121,6 +122,35 @@ namespace ServerMutation
                 Console.WriteLine(ex);
                 return null;
             }
+        }
+        [WebMethod]
+        public DataSet Cancelación (int NoSolicitud , int Tipo)
+        {
+            //Declaramos las partes de la conexión
+            MySqlConnection conn = new MySqlConnection();
+            MySqlCommand cmd = new MySqlCommand();
+            MySqlDataAdapter da = new MySqlDataAdapter();
+            DataSet ds = new DataSet();
+
+            //Datos de conexion
+            conn.ConnectionString = conexion;
+            cmd.Connection = conn;
+            cmd.CommandType = CommandType.Text;
+            if(Tipo == 0)
+            {
+                cmd.CommandText = $"SELECT IFNULL(C.f_registro,\"Vacio\") as f_cancelacion FROM solicitudes_canceladas C WHERE C.solicitud ={NoSolicitud} AND C.ts =1";
+            }
+            else if (Tipo == 1)
+            {
+                cmd.CommandText = $"SELECT IFNULL(C.f_registro,\"Vacio\") as f_cancelacion FROM solicitudes_canceladas C WHERE C.solicitud ={NoSolicitud} AND C.ts =2";
+            }
+            //mandamos a consultas
+            da.SelectCommand = cmd;
+            conn.Open();
+            da.Fill(ds);
+            conn.Close();
+            //Retornasmos los valores definidos
+            return ds;
         }
         [WebMethod]
         public DataSet Revision(int NoSolicitud, int Tipo)
